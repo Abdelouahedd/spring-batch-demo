@@ -25,7 +25,7 @@ public class EmpServiceImpl implements EmpService {
 
     @Override
     public Employee getEmployee(Long id) {
-        return this.empRepo.getById(id);
+        return this.empRepo.findById(id).orElseThrow(()->new RuntimeException("Employee not found !!"));
     }
 
     @Override
