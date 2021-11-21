@@ -1,4 +1,4 @@
-package com.example.springbatchdemo;
+package com.example.springbatchdemo.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
