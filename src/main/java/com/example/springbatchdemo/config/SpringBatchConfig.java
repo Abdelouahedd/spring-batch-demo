@@ -17,6 +17,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -24,7 +25,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Locale;
 
@@ -39,6 +43,8 @@ public class SpringBatchConfig {
     private final JobExecutionListener jobExecutionListener;
     private final EmpService empService;
     private DataSource dataSource;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Bean
     public Job job() {
@@ -54,8 +60,8 @@ public class SpringBatchConfig {
         return stepBuilderFactory.get("saveEmployees")
                 .<Employee, Employee>chunk(100)
                 .reader(itemReader())
-                .processor((ItemProcessor) asyncItemProcessor())
-                .writer(asyncItemWriter())
+                .processor(itemProcessor())
+                .writer(itemWriterJpa())
                 .build();
     }
 
@@ -88,6 +94,12 @@ public class SpringBatchConfig {
         return list -> this.empService.saveListOfEmployees((Iterable<Employee>) list);
     }
 
+    @Bean("jpaWriter")
+    public ItemWriter<Employee> itemWriterJpa() {
+        return list -> this.jpaItemWriter().write(list);
+
+    }
+
     @Bean("jdbcWriter")
     public JdbcBatchItemWriter itemWriterJdbc() {
         return new JdbcBatchItemWriterBuilder<>()
@@ -117,6 +129,13 @@ public class SpringBatchConfig {
         AsyncItemWriter<Employee> asyncItemWriter = new AsyncItemWriter<>();
         asyncItemWriter.setDelegate(this.itemWriterJdbc());
         return asyncItemWriter;
+    }
+
+    @Bean
+    public JpaItemWriter<Employee> jpaItemWriter() {
+        JpaItemWriter<Employee> employeeJpaItemWriter = new JpaItemWriter<>();
+        employeeJpaItemWriter.setEntityManagerFactory(this.entityManager.getEntityManagerFactory());
+        return employeeJpaItemWriter;
     }
 
 }
