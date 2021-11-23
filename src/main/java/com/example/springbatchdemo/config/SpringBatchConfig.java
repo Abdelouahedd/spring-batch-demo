@@ -13,12 +13,16 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.sql.DataSource;
 import java.util.Locale;
 
 
@@ -31,6 +35,7 @@ public class SpringBatchConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final JobExecutionListener jobExecutionListener;
     private final EmpService empService;
+    private DataSource dataSource;
 
     @Bean
     public Job job() {
@@ -47,7 +52,7 @@ public class SpringBatchConfig {
                 .<Employee, Employee>chunk(100)
                 .reader(itemReader())
                 .processor(itemProcessor())
-                .writer(itemWriter())
+                .writer(itemWriterJdbc())
                 .build();
     }
 
@@ -75,8 +80,18 @@ public class SpringBatchConfig {
         };
     }
 
-    @Bean
+    @Bean("repoWriter")
     public ItemWriter<Employee> itemWriter() {
         return list -> this.empService.saveListOfEmployees((Iterable<Employee>) list);
     }
+
+    @Bean("jdbcWriter")
+    public JdbcBatchItemWriter itemWriterJdbc() {
+        return new JdbcBatchItemWriterBuilder<>()
+                .dataSource(dataSource)
+                .sql("insert into employee_table (email, first_name, gender, ip_address, last_name, id) values (:email, :firstName, :gender, :ipAddress, :lastName, :id)")
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .build();
+    }
+
 }
