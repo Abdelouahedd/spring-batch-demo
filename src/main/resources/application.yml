@@ -16,3 +16,4 @@ spring:
   batch:
     job:
       enabled: false
+file: /data/emp.csv

@@ -21,11 +21,11 @@ import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -59,7 +59,7 @@ public class SpringBatchConfig {
     Step step() {
         return stepBuilderFactory.get("saveEmployees")
                 .<Employee, Employee>chunk(100)
-                .reader(itemReader())
+                .reader(itemReader(null))
                 .processor(itemProcessor())
                 .writer(itemWriterJpa())
                 .build();
@@ -68,10 +68,10 @@ public class SpringBatchConfig {
 
     @Bean
     @StepScope
-    public FlatFileItemReader<Employee> itemReader() {
+    public FlatFileItemReader<Employee> itemReader(@Value("${file}") String path) {
         return new FlatFileItemReaderBuilder<Employee>()
                 .name("EmployeItemReader")
-                .resource(new ClassPathResource("/data/emp.csv"))
+                .resource(new ClassPathResource(path))
                 .strict(false)
                 .linesToSkip(1)
                 .delimited()
