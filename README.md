@@ -7,7 +7,7 @@
 </div>
 <!--![example workflow](https://github.com/Abdelouahedd/spring-batch-demo/actions/workflows/maven.yml/badge.svg)-->
 
-<h1 align="center">Spring Batch Demo</h1>
+<h1 align="center">Welcome to Spring Batch Demo repo 👋</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/Abdelouahedd/spring-batch-demo?color=56BEB8">
@@ -93,11 +93,15 @@ $ mvn spring-boot:run
 # The server will initialize in the <http://localhost:8080>
 ```
 
+## ✨ Show your support
+
+Give a ⭐️ if this project helped you!
+
 ## :memo: License ##
 
 This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
 
-Made with :heart: by <a href="https://github.com/Abdelouahedd" target="_blank">Abdelouahedd</a>
+Made with :heart: by <a href="https://github.com/Abdelouahedd" target="_blank">👤 Abdelouahedd</a>
 
 &#xa0;
 
