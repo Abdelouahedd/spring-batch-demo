@@ -65,6 +65,7 @@ The following tools were used in this project:
 - [Spring](https://spring.io/)
 - [Maven](http://maven.apache.org/)
 - [Java 11](https://www.java.com/)
+- [Docker](https://www.docker.com/)
 
 ## :white_check_mark: Requirements ##
 
@@ -73,8 +74,8 @@ Before starting :checkered_flag:, you need to have
 - [Git](https://git-scm.com)
 - [java 11](https://www.java.com/)
 - [Maven](http://maven.apache.org/)
-  installed.
-
+  
+installed,or you can just install  [Docker](https://www.docker.com/)
 ## :checkered_flag: Starting ##
 
 ```bash
@@ -91,6 +92,22 @@ $ mvn clean compile
 $ mvn spring-boot:run
 
 # The server will initialize in the <http://localhost:8080>
+```
+or just use docker
+```bash
+# Clone this project
+$ git clone https://github.com/Abdelouahedd/spring-batch-demo
+
+# Access
+$ cd spring-batch-demo
+
+# Build
+$ docker-compose build
+
+#Run
+$ docker-compose up
+
+## The server will initialize in the <http://localhost:8080>
 ```
 
 ## ✨ Show your support
