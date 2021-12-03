@@ -109,6 +109,7 @@ $ docker-compose up
 
 ## The server will initialize in the <http://localhost:8080>
 ```
+To check the documentation of end point you can access to the swagger in <http://localhost:8080/swagger-ui.html>
 
 ## ✨ Show your support
 
